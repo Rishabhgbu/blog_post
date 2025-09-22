@@ -1,0 +1,40 @@
+# Node
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# Env
+.env
+*.env.local
+
+# Logs
+logs
+*.log
+
+# OS/Editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Vercel/Build
+.vercel/
+public/build/
+build/
+dist/
+
+# CRA
+public/.cache/
+
+# Uploads (avoid committing user content)
+uploads/
+
+# Coverage / Test
+coverage/
+*.coverage
+
+# Misc
+*.swp
+*.swo

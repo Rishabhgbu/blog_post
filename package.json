@@ -8,6 +8,7 @@
     "server": "node middleware/server.js",
     "dev": "nodemon middleware/server.js",
     "client": "npm start --prefix public",
+    "build": "npm run build --prefix public",
     "dev:full": "concurrently \"npm run dev\" \"npm run client\""
   },
   "dependencies": {
