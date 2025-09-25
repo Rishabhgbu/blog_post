@@ -9,7 +9,21 @@
     }
   ],
   "routes": [
-    { "handle": "filesystem" },
-    { "src": "/(.*)", "dest": "/index.html" }
+    {
+      "src": "/api/(.*)",
+      "dest": "/api/[...all]"
+    },
+    {
+      "src": "/uploads/(.*)",
+      "dest": "/api/[...all]"
+    },
+    {
+      "src": "/static/(.*)",
+      "dest": "/public/build/static/$1"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/public/build/index.html"
+    }
   ]
 }
