@@ -2,11 +2,12 @@
   "version": 2,
   "buildCommand": "cd public && npm run build",
   "outputDirectory": "public/build",
-  "functions": {
-    "api/*.js": {
-      "runtime": "nodejs18.x"
+  "builds": [
+    {
+      "src": "api/*.js",
+      "use": "@vercel/node"
     }
-  },
+  ],
   "routes": [
     {
       "src": "/api/(.*)",
