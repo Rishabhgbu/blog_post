@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../services/api';
 import PostCard from '../components/PostCard';
@@ -12,10 +12,7 @@ function Home({ isAuth }) {
   const [mediaErrors, setMediaErrors] = useState({ image: '', video: '' });
   const [filter, setFilter] = useState('all'); // 'all' | 'mine'
 
-  useEffect(() => {
-    fetchPosts();
-  }, [filter]);
-
+  
   // ----- Helpers for URL validation and embed detection -----
   const isValidUrl = (val) => {
     if (!val) return true; // optional field
@@ -79,7 +76,7 @@ function Home({ isAuth }) {
     return /(\.mp4|\.webm|\.ogg)(\?.*)?$/i.test(val);
   };
 
-  const fetchPosts = async (overrideFilter) => {
+  const fetchPosts = useCallback(async (overrideFilter) => {
     try {
       console.log('Fetching posts...');
       // Add cache-busting query to ensure we always get the latest posts
@@ -113,7 +110,11 @@ function Home({ isAuth }) {
       console.error('Error response:', err.response);
       setPosts([]);
     }
-  };
+  }, [filter]);
+
+  useEffect(() => {
+    fetchPosts();
+  }, [fetchPosts]);
 
   // Explicit helpers to avoid any stale state issues
   const showAllPosts = async () => {
@@ -122,16 +123,7 @@ function Home({ isAuth }) {
     await fetchPosts('all');
   };
 
-  const showMyPosts = async () => {
-    console.log('Action: showMyPosts');
-    const token = localStorage.getItem('token');
-    if (!token) {
-      alert('Please login to view your posts');
-      return;
-    }
-    setFilter('mine');
-    await fetchPosts('mine');
-  };
+  
 
   const handleCreatePost = async (e) => {
     e.preventDefault();

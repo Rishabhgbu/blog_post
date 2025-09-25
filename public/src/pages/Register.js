@@ -5,7 +5,6 @@ import api from '../services/api';
 function Register() {
   const [formData, setFormData] = useState({ username: '', password: '', confirmPassword: '' });
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState('');
   const navigate = useNavigate();
 
   const handleChange = (e) => {

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useParams } from 'react-router-dom';
 import api from '../services/api';
 import CommentList from '../components/CommentList';
@@ -10,28 +10,28 @@ function PostDetail({ isAuth }) {
   const [newComment, setNewComment] = useState('');
   const [selectedEmoji, setSelectedEmoji] = useState('💬');
 
-  useEffect(() => {
-    fetchPost();
-    fetchComments();
-  }, [id]);
-
-  const fetchPost = async () => {
+  const fetchPost = useCallback(async () => {
     try {
       const res = await api.get(`/posts/${id}`);
       setPost(res.data);
     } catch (err) {
       console.error(err);
     }
-  };
+  }, [id]);
 
-  const fetchComments = async () => {
+  const fetchComments = useCallback(async () => {
     try {
       const res = await api.get('/comments', { params: { post_id: id } });
       setComments(res.data);
     } catch (err) {
       console.error(err);
     }
-  };
+  }, [id]);
+
+  useEffect(() => {
+    fetchPost();
+    fetchComments();
+  }, [fetchPost, fetchComments]);
 
   const [isLoading, setIsLoading] = useState(false);
 
