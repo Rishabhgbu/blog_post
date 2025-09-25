@@ -8,7 +8,8 @@ const fs = require('fs');
 dotenv.config();
 
 const app = express();
-const API_PREFIX = process.env.API_PREFIX !== undefined ? process.env.API_PREFIX : '/api';
+const isVercel = !!process.env.VERCEL;
+const API_PREFIX = process.env.API_PREFIX !== undefined ? process.env.API_PREFIX : (isVercel ? '' : '/api');
 
 // Set mongoose options
 mongoose.set('strictQuery', false);
@@ -43,6 +44,18 @@ mongoose.connection.on('error', (err) => console.error('Mongoose event: error', 
 // Middleware
 app.use(express.json());
 app.use(cors());
+
+// When running on Vercel behind a rewrite from /api/* to a single serverless function,
+// normalize the incoming path to remove the "/api" base so Express routes match.
+const baseStrip = isVercel ? '/api' : '';
+if (baseStrip) {
+  app.use((req, _res, next) => {
+    if (req.url.startsWith(baseStrip)) {
+      req.url = req.url.slice(baseStrip.length) || '/';
+    }
+    next();
+  });
+}
 
 // Optionally short-circuit when DB is not connected
 if (process.env.REQUIRE_DB === 'true') {
