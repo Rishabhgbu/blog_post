@@ -1,29 +1,23 @@
 {
   "version": 2,
-  "builds": [
-    { "src": "api/*.js", "use": "@vercel/node" },
-    {
-      "src": "public/package.json",
-      "use": "@vercel/static-build",
-      "config": { "distDir": "build" }
+  "buildCommand": "cd public && npm run build",
+  "outputDirectory": "public/build",
+  "functions": {
+    "api/*.js": {
+      "runtime": "nodejs18.x"
     }
-  ],
+  },
   "routes": [
     {
       "src": "/api/(.*)",
       "dest": "/api/[...all]"
     },
     {
-      "src": "/uploads/(.*)",
-      "dest": "/api/[...all]"
-    },
-    {
-      "src": "/static/(.*)",
-      "dest": "/public/build/static/$1"
+      "handle": "filesystem"
     },
     {
       "src": "/(.*)",
-      "dest": "/public/build/index.html"
+      "dest": "/index.html"
     }
   ]
 }
