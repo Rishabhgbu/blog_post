@@ -1,14 +1,15 @@
 {
   "builds": [
-    { "src": "api/index.js", "use": "@vercel/node" },
+    { "src": "api/*.js", "use": "@vercel/node" },
     {
       "src": "public/package.json",
       "use": "@vercel/static-build",
       "config": { "distDir": "build" }
     }
   ],
-  "rewrites": [
-    { "source": "/api/:path*", "destination": "/api/index" },
-    { "source": "/:path*", "destination": "/index.html" }
+  "routes": [
+    { "src": "/api/(.*)", "dest": "/api/[...all].js" },
+    { "handle": "filesystem" },
+    { "src": "/(.*)", "dest": "/index.html" }
   ]
 }
